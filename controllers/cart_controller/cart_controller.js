@@ -1,0 +1,147 @@
+// imports
+const mongoose = require("mongoose");
+
+// my exports
+const isValidObjectId = require("../../helper/isValidObjectId");
+const Cart = require("../../models/Cart");
+const CartItem = require("../../models/CartItem");
+
+const getCartController = async (req, res) => {
+	const { uid } = req.params;
+	isValidObjectId(uid, res);
+
+	Cart.findOne({ cartOwnerId: uid, isCheckout: false })
+		.then((response) => {
+			if (!response) {
+				return res.status(404).json("No cart found");
+			}
+
+			return res.status(200).json(response);
+		})
+		.catch((err) => {
+			return res.status(500).json("Internal server error");
+		});
+};
+
+const getCartShippedController = async (req, res) => {
+	const { uid } = req.params;
+
+	Cart.findOne({ cartOwnerId: uid, isCheckout: true })
+		.then((response) => {
+			if (response) {
+				return res.status(200).json(response);
+			}
+
+			return res.status(404).json("No carts shipped");
+		})
+		.catch((err) => {
+			return res.status(500).json("Internal server error");
+		});
+};
+
+const createCartController = async (req, res) => {
+	const { uid } = req.params;
+
+	isValidObjectId(uid, res);
+
+	Cart.create({ cartOwnerId: uid })
+		.then((response) => {
+			if (!response) {
+				return res.status(500).json("Failed to create cart");
+			}
+			return res.status(200).json("Cart created");
+		})
+		.catch((err) => res.status(500).json("Internal server error"));
+};
+
+const addToCartController = async (req, res) => {
+	const { quantity } = req.body;
+	const { uid, productId } = req.params;
+	isValidObjectId(uid, res);
+	isValidObjectId(productId, res);
+
+	if (!quantity) {
+		return res.status(400).json("Quantity field is null or 0");
+	}
+
+	const foundCart = await Cart.findOne({ cartOwnerId: uid, isCheckout: false }).catch((err) => {
+		return res.status(500).json("Internal server error");
+	});
+
+	if (!foundCart) {
+		return res.status(404).json("No cart found");
+	}
+
+	CartItem.create({ cartId: foundCart.id, productItemId: productId, quantity: quantity })
+		.then(async (itemCreated) => {
+			if (!itemCreated) {
+				return res.status(500).json("Failed to create Cart Item");
+			}
+
+			await Cart.findByIdAndUpdate(foundCart.id, {
+				cartItemsId: [...foundCart.cartItemsId, itemCreated.id],
+			})
+				.then((updatedCart) => {
+					if (!updatedCart) {
+						return res.status(500).json("Failed to add cart");
+					}
+					return res.status(200).json("Added to cart");
+				})
+				.catch((err) => res.status(500).json("Internal server error"));
+		})
+		.catch((err) => res.status(500).json("Internal server error"));
+};
+
+const deleteCartController = async (req, res) => {
+	const { uid } = req.params;
+
+	isValidObjectId(uid, res);
+
+	Cart.findOneAndDelete({ cartOwnerId: uid, isCheckout: false })
+		.then((response) => {
+			if (!response) {
+				return res.status(404).json("No cart to be deleted");
+			}
+			return res.status(200).json("Cart deleted successfully");
+		})
+		.catch((err) => res.status(500).json("Internal server error"));
+};
+
+const removeFromCartController = async (req, res) => {
+	const { uid, cartItemId } = req.params;
+	isValidObjectId(uid, res);
+	isValidObjectId(cartItemId, res);
+
+	const foundCart = await Cart.findOne({ cartOwnerId: uid, isCheckout: false }).catch((err) => {
+		return res.status(500).json("Internal server error");
+	});
+
+	if (!foundCart) {
+		return res.status(400).json("No cart found");
+	}
+
+	Cart.findByIdAndUpdate(foundCart.id, {
+		cartItemsId: [
+			...foundCart.cartItemsId.filter((itemId) => {
+				if (itemId !== cartItemId) return itemId;
+			}),
+		],
+	})
+		.then(async (response) => {
+			CartItem.findByIdAndDelete(cartItemId)
+				.then((response) => {
+					return res.status(200).json("Cart item removed");
+				})
+				.catch((err) => res.status(500).json("Internal server error"));
+		})
+		.catch((err) => res.status(500).json("Internal server error"));
+};
+
+module.exports = {
+	getCartController,
+	getCartShippedController,
+	createCartController,
+	addToCartController,
+	removeFromCartController,
+	deleteCartController,
+};
