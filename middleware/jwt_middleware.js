@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
 		if (err) {
 			return res.status(401).json(err);
 		}
-
+		console.log(req.cookies?.Bearer);
 		return next();
 	});
 };

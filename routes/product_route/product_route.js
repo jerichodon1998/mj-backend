@@ -9,6 +9,7 @@ const {
 	productDeleteController,
 } = require("../../controllers/product_controller/product_controller");
 const { upload } = require("../../configurations/files_config");
+const { verifyToken } = require("../../middleware/jwt_middleware");
 
 // my imports
 
@@ -18,10 +19,22 @@ productRoute.get("/", expressAsyncHandler(getProductsController));
 
 productRoute.get("/:id", expressAsyncHandler(getProductController));
 
-productRoute.post("/", [upload.any("file")], expressAsyncHandler(createProduct));
+productRoute.post(
+	"/",
+	[verifyToken, upload.any("file")],
+	expressAsyncHandler(createProduct)
+);
 
-productRoute.put("/:id", [upload.array("file")], expressAsyncHandler(productUpdateController));
+productRoute.put(
+	"/:id",
+	[verifyToken, upload.array("file")],
+	expressAsyncHandler(productUpdateController)
+);
 
-productRoute.delete("/:id", expressAsyncHandler(productDeleteController));
+productRoute.delete(
+	"/:id",
+	[verifyToken],
+	expressAsyncHandler(productDeleteController)
+);
 
 module.exports = productRoute;
