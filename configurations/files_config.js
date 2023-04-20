@@ -4,10 +4,10 @@ const { GridFsStorage } = require("multer-gridfs-storage");
 const path = require("path");
 const crypto = require("crypto");
 
-const gfs = { GFS: null };
+let gfs = { GFS: null };
 
 // use env files for this
-const uri = process.env.DB_URI || "mongodb://127.0.0.1:27017/ecommerce-app2";
+const uri = process.env.DB_URI || "mongodb://127.0.0.1:27017/ecommerce-app";
 
 const storage = new GridFsStorage({
 	url: uri,

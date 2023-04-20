@@ -7,7 +7,7 @@ const isValidObjectId = require("../../helper/isValidObjectId");
 
 const getProductsController = async (req, res) => {
 	const page = req.query.page || 1;
-	const productPerPage = 30;
+	const productPerPage = 28;
 
 	await Product.find({})
 		.skip((page - 1) * productPerPage)
@@ -16,7 +16,9 @@ const getProductsController = async (req, res) => {
 			const count = await Product.countDocuments({});
 
 			const pages = Math.ceil(count / productPerPage);
-			return res.status(200).json({ products: data, pages: pages, items: data.length });
+			return res
+				.status(200)
+				.json({ products: data, pages: pages, items: data.length });
 		})
 		.catch((error) => res.status(500).json("Internal server error"));
 };
@@ -32,11 +34,26 @@ const getProductController = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-	const { name, ownerId, currency, category, description, price, stock, brand } = req.body;
+	const {
+		name,
+		ownerId,
+		currency,
+		category,
+		description,
+		price,
+		stock,
+		brand,
+	} = req.body;
 	const imagesId = req.files?.map((image) => image.id) || null;
 	// check if all fields has values
 	if (
-		(!name || !ownerId || !currency || !category || !description || !price || !stock,
+		(!name ||
+			!ownerId ||
+			!currency ||
+			!category ||
+			!description ||
+			!price ||
+			!stock,
 		!imagesId,
 		!brand)
 	) {
@@ -63,7 +80,8 @@ const createProduct = async (req, res) => {
 };
 
 const productUpdateController = async (req, res) => {
-	const { name, currency, category, description, price, stock, brand } = req.body;
+	const { name, currency, category, description, price, stock, brand } =
+		req.body;
 	const { id } = req.params;
 	const updates = {};
 	if (name) {

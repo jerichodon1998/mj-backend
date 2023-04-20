@@ -17,6 +17,7 @@ const cartRoute = require("./routes/cart_route/cart_route");
 const persistUserRoute = require("./routes/registration_and_authentication_route/persist_user_route");
 const signoutRoute = require("./routes/registration_and_authentication_route/signout_route");
 const cartItemRoute = require("./routes/cart_item_route/cart_item_route");
+const { default: mongoose } = require("mongoose");
 
 conn;
 
