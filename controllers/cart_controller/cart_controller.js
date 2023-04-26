@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const isValidObjectId = require("../../helper/isValidObjectId");
 const Cart = require("../../models/Cart");
 const CartItem = require("../../models/CartItem");
+const User = require("../../models/User");
 
 const getCartController = async (req, res) => {
 	const { uid } = req.params;
@@ -26,7 +27,7 @@ const getCartController = async (req, res) => {
 const getCartShippedController = async (req, res) => {
 	const { uid } = req.params;
 
-	Cart.findOne({ cartOwnerId: uid, isCheckout: true })
+	Cart.find({ cartOwnerId: uid, isCheckout: true })
 		.then((response) => {
 			if (response) {
 				return res.status(200).json(response);
@@ -36,6 +37,33 @@ const getCartShippedController = async (req, res) => {
 		})
 		.catch((err) => {
 			return res.status(500).json("Internal server error");
+		});
+};
+
+const checkOutCartController = async (req, res) => {
+	const { uid } = req.params;
+
+	await User.findById(uid)
+		.then(async (user) => {
+			if (!user.address) {
+				return res.status(400).json("No address found");
+			}
+			Cart.findOneAndUpdate(
+				{ cartOwnerId: uid, isCheckout: false },
+				{ isCheckout: true }
+			)
+				.then((response) => {
+					if (response) {
+						return res.status(200).json("Cart Checked Out");
+					}
+					return res.status(404).json("No Cart to Check Out");
+				})
+				.catch((err) => {
+					return res.status(500).json("Internal server error");
+				});
+		})
+		.catch((error) => {
+			return res.status(500).json("Internal Server Error");
 		});
 };
 
@@ -64,7 +92,10 @@ const addToCartController = async (req, res) => {
 		return res.status(400).json("Quantity field is null or 0");
 	}
 
-	const foundCart = await Cart.findOne({ cartOwnerId: uid, isCheckout: false }).catch((err) => {
+	const foundCart = await Cart.findOne({
+		cartOwnerId: uid,
+		isCheckout: false,
+	}).catch((err) => {
 		return res.status(500).json("Internal server error");
 	});
 
@@ -72,7 +103,11 @@ const addToCartController = async (req, res) => {
 		return res.status(404).json("No cart found");
 	}
 
-	CartItem.create({ cartId: foundCart.id, productItemId: productId, quantity: quantity })
+	CartItem.create({
+		cartId: foundCart.id,
+		productItemId: productId,
+		quantity: quantity,
+	})
 		.then(async (itemCreated) => {
 			if (!itemCreated) {
 				return res.status(500).json("Failed to create Cart Item");
@@ -112,7 +147,10 @@ const removeFromCartController = async (req, res) => {
 	isValidObjectId(uid, res);
 	isValidObjectId(cartItemId, res);
 
-	const foundCart = await Cart.findOne({ cartOwnerId: uid, isCheckout: false }).catch((err) => {
+	const foundCart = await Cart.findOne({
+		cartOwnerId: uid,
+		isCheckout: false,
+	}).catch((err) => {
 		return res.status(500).json("Internal server error");
 	});
 
@@ -144,4 +182,5 @@ module.exports = {
 	addToCartController,
 	removeFromCartController,
 	deleteCartController,
+	checkOutCartController,
 };

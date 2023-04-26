@@ -10,20 +10,48 @@ const {
 	removeFromCartController,
 	createCartController,
 	deleteCartController,
+	checkOutCartController,
 } = require("../../controllers/cart_controller/cart_controller");
+const { verifyToken } = require("../../middleware/jwt_middleware");
 
 const cartRoute = express.Router();
 
-cartRoute.get("/shipped/:uid", expressAsyncHandler(getCartShippedController));
+cartRoute.get(
+	"/shipped/:uid",
+	[verifyToken],
+	expressAsyncHandler(getCartShippedController)
+);
 
-cartRoute.get("/:uid", expressAsyncHandler(getCartController));
+cartRoute.get("/:uid", [verifyToken], expressAsyncHandler(getCartController));
 
-cartRoute.delete("/:uid", expressAsyncHandler(deleteCartController));
+cartRoute.delete(
+	"/:uid",
+	[verifyToken],
+	expressAsyncHandler(deleteCartController)
+);
 
-cartRoute.put("/:uid/addToCart/:productId", expressAsyncHandler(addToCartController));
+cartRoute.put(
+	"/:uid/addToCart/:productId",
+	[verifyToken],
+	expressAsyncHandler(addToCartController)
+);
 
-cartRoute.put("/:uid/removeFromCart/:cartItemId", expressAsyncHandler(removeFromCartController));
+cartRoute.put(
+	"/:uid/removeFromCart/:cartItemId",
+	[verifyToken],
+	expressAsyncHandler(removeFromCartController)
+);
 
-cartRoute.post("/:uid", expressAsyncHandler(createCartController));
+cartRoute.put(
+	"/checkOut/:uid",
+	[verifyToken],
+	expressAsyncHandler(checkOutCartController)
+);
+
+cartRoute.post(
+	"/:uid",
+	[verifyToken],
+	expressAsyncHandler(createCartController)
+);
 
 module.exports = cartRoute;
