@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(
 	cors({
 		credentials: true,
-		origin: ["http://localhost:3000", "https://mj-ecommerce.vercel.app/"],
+		origin: process.env.FRONTEND_URL || "http://localhost:3000",
 	})
 );
 
