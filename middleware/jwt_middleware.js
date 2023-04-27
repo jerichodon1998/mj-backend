@@ -1,7 +1,7 @@
 // imports
 const jwt = require("jsonwebtoken");
 
-const accessTokenKey = "accesstokenkey";
+const accessTokenKey = process.env.ACCESS_TOKEN_KEY || "accesstokenkey";
 
 const verifyToken = (req, res, next) => {
 	// ***** this get token code is for postman *****//
