@@ -25,6 +25,8 @@ conn;
 const app = express();
 const PORT = process.env.PORT || 1337;
 
+const originURL = process.env.FRONTEND_URL || "http://localhost:3000";
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,7 +34,7 @@ app.use(cookieParser());
 app.use(
 	cors({
 		credentials: true,
-		origin: process.env.FRONTEND_URL || "http://localhost:3000",
+		origin: originURL,
 	})
 );
 
