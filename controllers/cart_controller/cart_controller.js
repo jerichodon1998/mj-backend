@@ -46,7 +46,9 @@ const checkOutCartController = async (req, res) => {
 	await User.findById(uid)
 		.then(async (user) => {
 			if (!user.address) {
-				return res.status(400).json("No address found");
+				return res
+					.status(400)
+					.json("No address found, update your address in your profile");
 			}
 			Cart.findOneAndUpdate(
 				{ cartOwnerId: uid, isCheckout: false },
