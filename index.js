@@ -58,7 +58,7 @@ app.get("/heartbeat", (req, res) => {
 app.get("/", (req, res) => res.json("connected"));
 
 // ping server to stay alive
-cron.schedule("* 1 * * *", async () => {
+cron.schedule("*/30 * * * *", async () => {
 	if (process.env.ENVIRONMENT != "production") {
 		try {
 			// Send an HTTP GET request to an endpoint on your server
