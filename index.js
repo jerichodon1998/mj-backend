@@ -28,6 +28,7 @@ const PORT = process.env.PORT || 1337;
 
 const originURL = process.env.FRONTEND_URL || "http://localhost:3000";
 const backendURL = process.env.BACKEND_URL || `http://localhost:1337/heartbeat`;
+const cron_sched = process.env.CRON_SCHED || "* * * * *";
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -56,10 +57,9 @@ app.get("/heartbeat", (req, res) => {
 });
 
 app.get("/", (req, res) => res.json("connected"));
-
 // ping server to stay alive
-cron.schedule("*/30 * * * *", async () => {
-	if (process.env.ENVIRONMENT != "production") {
+cron.schedule(cron_sched, async () => {
+	if (process.env.ENVIRONMENT !== "production") {
 		try {
 			// Send an HTTP GET request to an endpoint on your server
 			const response = await axios
