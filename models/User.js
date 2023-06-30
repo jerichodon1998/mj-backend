@@ -11,7 +11,7 @@ const UserSchema = mongoose.Schema(
 		phoneNumber: { type: String },
 		address: { type: String },
 		profilePictureId: { type: mongoose.Types.ObjectId },
-		role: { type: String },
+		role: { type: Array },
 	},
 	{ timestamps: true }
 );

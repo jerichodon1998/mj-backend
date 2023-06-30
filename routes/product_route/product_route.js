@@ -10,6 +10,7 @@ const {
 } = require("../../controllers/product_controller/product_controller");
 const { upload } = require("../../configurations/files_config");
 const { verifyToken } = require("../../middleware/jwt_middleware");
+const { verifyAdmin } = require("../../middleware/user_roles_verify");
 
 // my imports
 
@@ -21,19 +22,19 @@ productRoute.get("/:id", expressAsyncHandler(getProductController));
 
 productRoute.post(
 	"/",
-	[verifyToken, upload.any("file")],
+	[verifyToken, verifyAdmin, upload.any("file")],
 	expressAsyncHandler(createProduct)
 );
 
 productRoute.put(
 	"/:id",
-	[verifyToken, upload.array("file")],
+	[verifyToken, verifyAdmin, upload.array("file")],
 	expressAsyncHandler(productUpdateController)
 );
 
 productRoute.delete(
 	"/:id",
-	[verifyToken],
+	[verifyToken, verifyAdmin],
 	expressAsyncHandler(productDeleteController)
 );
 
