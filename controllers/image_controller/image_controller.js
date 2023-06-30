@@ -42,9 +42,11 @@ const deleteImageController = async (req, res) => {
 	if (elements.length > 0) {
 		gfs.GFS.delete(new ObjectId(id));
 		return res.status(200).json("Ok");
-	} else {
-		return res.status(404).json("Don't exist");
 	}
+
+	// else {
+	// 	return res.status(404).json("Don't exist");
+	// }
 };
 
 module.exports = { getImageController, deleteImageController };
