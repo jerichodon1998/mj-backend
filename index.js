@@ -62,18 +62,16 @@ cron.schedule(cron_sched, async () => {
 	if (process.env.ENVIRONMENT !== "production") {
 		try {
 			// Send an HTTP GET request to an endpoint on your server
-			const response = await axios
-				.get("http://localhost:1337/heartbeat")
-				.then((_) => {
-					console.log("Requested Successfully");
-				});
+			await axios.get("http://localhost:1337/heartbeat").then((_) => {
+				console.log("Requested Successfully");
+			});
 		} catch (error) {
 			console.error("Error sending request:", error);
 		}
 	} else {
 		try {
 			// Send an HTTP GET request to an endpoint on your server
-			const response = await axios.get(`${backendURL}/heartbeat`);
+			await axios.get(`${backendURL}/heartbeat`);
 		} catch (error) {
 			console.error("Error sending request:", error);
 		}
