@@ -125,6 +125,7 @@ const productDeleteController = async (req, res) => {
 			return res.status(200).json("Deleted successfully");
 		})
 		.catch((err) => {
+			console.log(err);
 			return res.status(500).json("Internal server error");
 		});
 };
