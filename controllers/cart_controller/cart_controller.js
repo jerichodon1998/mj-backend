@@ -6,6 +6,7 @@ const isValidObjectId = require("../../helper/isValidObjectId");
 const Cart = require("../../models/Cart");
 const CartItem = require("../../models/CartItem");
 const User = require("../../models/User");
+const Product = require("../../models/Product");
 
 const getCartController = async (req, res) => {
 	const { uid } = req.params;
@@ -50,7 +51,34 @@ const checkOutCartController = async (req, res) => {
 					.status(400)
 					.json("No address found, update your address in your profile");
 			}
-			Cart.findOneAndUpdate(
+
+			const foundCart = await Cart.findOne({
+				cartOwnerId: uid,
+				isCheckout: false,
+			});
+			for (const cartItemId of foundCart.cartItemsId) {
+				const cartItem = await CartItem.findById(cartItemId);
+				if (!cartItem) {
+					return res.status(404).json("Cart Item Not Found");
+				}
+
+				const productItem = await Product.findById(cartItem.productItemId);
+				if (!productItem) {
+					return res.status(404).json("Product Item Not Found");
+				}
+
+				if (cartItem.quantity > productItem.stock) {
+					return res
+						.status(406)
+						.json(`Insufficient stock available ${productItem.name}`);
+				}
+
+				await Product.findByIdAndUpdate(cartItem.productItemId, {
+					stock: productItem.stock - cartItem.quantity,
+				});
+			}
+
+			await Cart.findOneAndUpdate(
 				{ cartOwnerId: uid, isCheckout: false },
 				{ isCheckout: true }
 			)
@@ -103,6 +131,12 @@ const addToCartController = async (req, res) => {
 
 	if (!foundCart) {
 		return res.status(404).json("No cart found");
+	}
+
+	const product = await Product.findById(productId);
+
+	if (!product || product.stock <= 0 || quantity > product.stock) {
+		return res.status(406).json("Insufficient stock available");
 	}
 
 	CartItem.create({
