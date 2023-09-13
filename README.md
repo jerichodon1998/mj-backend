@@ -19,4 +19,4 @@ npm run dev
 yarn install
 ```
 
-Open [http://localhost:1337](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:1337](http://localhost:1337) with your browser to see the result.
