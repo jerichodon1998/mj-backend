@@ -1,24 +1,24 @@
 // import packages
-const express = require("express");
-const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+import express from "express";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 require("dotenv").config();
-const cron = require("node-cron");
-const axios = require("axios");
+import cron from "node-cron";
+import axios from "axios";
 // my exports
 
-const conn = require("../configurations/db_config");
-const signupRoute = require("./routes/registration_and_authentication_route/signup_route");
-const signinRoute = require("./routes/registration_and_authentication_route/signin_route");
-const profileRoute = require("./routes/profile_route/profile_route");
-const imageRoute = require("./routes/image_route/image_route");
-const productRoute = require("./routes/product_route/product_route");
-const cartRoute = require("./routes/cart_route/cart_route");
-const persistUserRoute = require("./routes/registration_and_authentication_route/persist_user_route");
-const signoutRoute = require("./routes/registration_and_authentication_route/signout_route");
-const cartItemRoute = require("./routes/cart_item_route/cart_item_route");
-const { default: mongoose } = require("mongoose");
+import conn from "./configurations/db_config";
+import signupRoute from "./routes/registration_and_authentication_route/signup_route";
+import signinRoute from "./routes/registration_and_authentication_route/signin_route";
+import profileRoute from "./routes/profile_route/profile_route";
+import imageRoute from "./routes/image_route/image_route";
+import productRoute from "./routes/product_route/product_route";
+import cartRoute from "./routes/cart_route/cart_route";
+import persistUserRoute from "./routes/registration_and_authentication_route/persist_user_route";
+import signoutRoute from "./routes/registration_and_authentication_route/signout_route";
+import cartItemRoute from "./routes/cart_item_route/cart_item_route";
+import { default as mongoose } from "mongoose";
 
 conn;
 
