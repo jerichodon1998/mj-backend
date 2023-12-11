@@ -8,7 +8,7 @@ const cron = require("node-cron");
 const axios = require("axios");
 // my exports
 
-const conn = require("./configurations/db_config");
+const conn = require("../configurations/db_config");
 const signupRoute = require("./routes/registration_and_authentication_route/signup_route");
 const signinRoute = require("./routes/registration_and_authentication_route/signin_route");
 const profileRoute = require("./routes/profile_route/profile_route");
