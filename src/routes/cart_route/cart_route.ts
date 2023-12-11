@@ -1,9 +1,9 @@
 // imports
-const express = require("express");
-const expressAsyncHandler = require("express-async-handler");
+import express from "express";
+import expressAsyncHandler from "express-async-handler";
 
 // my imports
-const {
+import {
 	getCartController,
 	getCartShippedController,
 	addToCartController,
@@ -11,8 +11,8 @@ const {
 	createCartController,
 	deleteCartController,
 	checkOutCartController,
-} = require("../../controllers/cart_controller/cart_controller");
-const { verifyToken } = require("../../middleware/jwt_middleware");
+} from "../../controllers/cart_controller/cart_controller";
+import { verifyToken } from "../../middleware/jwt_middleware";
 
 const cartRoute = express.Router();
 
@@ -54,4 +54,4 @@ cartRoute.post(
 	expressAsyncHandler(createCartController)
 );
 
-module.exports = cartRoute;
+export default cartRoute;

@@ -1,16 +1,16 @@
 // imports
-const express = require("express");
-const expressAsyncHandler = require("express-async-handler");
-const {
+import express from "express";
+import expressAsyncHandler from "express-async-handler";
+import {
 	getProductsController,
 	getProductController,
 	createProduct,
 	productUpdateController,
 	productDeleteController,
-} = require("../../controllers/product_controller/product_controller");
-const { upload } = require("../../configurations/files_config");
-const { verifyToken } = require("../../middleware/jwt_middleware");
-const { verifyAdmin } = require("../../middleware/user_roles_verify");
+} from "../../controllers/product_controller/product_controller";
+import { upload } from "../../configurations/files_config";
+import { verifyToken } from "../../middleware/jwt_middleware";
+import { verifyAdmin } from "../../middleware/user_roles_verify";
 
 // my imports
 
@@ -38,4 +38,4 @@ productRoute.delete(
 	expressAsyncHandler(productDeleteController)
 );
 
-module.exports = productRoute;
+export default productRoute;
