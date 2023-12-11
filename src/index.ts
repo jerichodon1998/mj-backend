@@ -18,7 +18,6 @@ import cartRoute from "./routes/cart_route/cart_route";
 import persistUserRoute from "./routes/registration_and_authentication_route/persist_user_route";
 import signoutRoute from "./routes/registration_and_authentication_route/signout_route";
 import cartItemRoute from "./routes/cart_item_route/cart_item_route";
-import { default as mongoose } from "mongoose";
 
 conn;
 
