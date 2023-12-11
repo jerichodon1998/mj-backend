@@ -2,15 +2,15 @@
 import { Schema, Document, model } from "mongoose";
 
 export interface IUser extends Document {
-	firstname: Schema.Types.String;
-	lastname: Schema.Types.String;
-	password: Schema.Types.String;
-	email: Schema.Types.String;
-	username: Schema.Types.String;
-	phoneNumber?: Schema.Types.String;
-	address?: Schema.Types.String;
+	firstname: string;
+	lastname: string;
+	password: string;
+	email: string;
+	username: string;
+	phoneNumber?: string;
+	address?: string;
 	profilePictureId?: Schema.Types.ObjectId;
-	role: [Schema.Types.String];
+	role: string[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -28,4 +28,4 @@ const UserSchema = new Schema<IUser>(
 	{ timestamps: true }
 );
 
-export default model("User", UserSchema);
+export default model<IUser>("User", UserSchema);

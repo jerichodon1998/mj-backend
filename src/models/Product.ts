@@ -2,18 +2,18 @@
 import { Document, Schema, model } from "mongoose";
 
 export interface IProduct extends Document {
-	name: Schema.Types.String;
+	name: string;
 	ownerId: Schema.Types.ObjectId;
-	currency: Schema.Types.String;
-	category: Schema.Types.String;
-	description: Schema.Types.String;
-	brand: Schema.Types.String;
-	price: Schema.Types.Number;
-	stock: Schema.Types.Number;
+	currency: string;
+	category: string;
+	description: string;
+	brand: string;
+	price: Number;
+	stock: Number;
 	imagesId: [Schema.Types.ObjectId];
 
 	// optional or not a user input fields
-	rating: { type: Schema.Types.Number; default: 0 };
+	rating: { type: Number; default: 0 };
 }
 
 const ProductSchema = new Schema<IProduct>(
@@ -34,4 +34,4 @@ const ProductSchema = new Schema<IProduct>(
 	{ timestamps: true }
 );
 
-export default model("Product", ProductSchema);
+export default model<IProduct>("Product", ProductSchema);

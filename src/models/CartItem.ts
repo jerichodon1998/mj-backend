@@ -4,7 +4,7 @@ import { Document, Schema, model } from "mongoose";
 export interface ICartItem extends Document {
 	cartId: Schema.Types.ObjectId;
 	productItemId: Schema.Types.ObjectId;
-	quantity: Schema.Types.Number;
+	quantity: Number;
 }
 
 const CartItemSchema = new Schema<ICartItem>(
@@ -16,4 +16,4 @@ const CartItemSchema = new Schema<ICartItem>(
 	{ timestamps: true }
 );
 
-export default model("CartItem", CartItemSchema);
+export default model<ICartItem>("CartItem", CartItemSchema);
