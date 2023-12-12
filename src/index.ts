@@ -8,7 +8,7 @@ import cron from "node-cron";
 import axios from "axios";
 // my exports
 
-import conn from "./configurations/db_config";
+import { conn } from "./configurations/db_config";
 import signupRoute from "./routes/registration_and_authentication_route/signup_route";
 import signinRoute from "./routes/registration_and_authentication_route/signin_route";
 import profileRoute from "./routes/profile_route/profile_route";
