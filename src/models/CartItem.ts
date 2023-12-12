@@ -1,17 +1,17 @@
 // import packages
-import { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model } from "mongoose";
 
 export interface ICartItem extends Document {
-	cartId: Schema.Types.ObjectId;
-	productItemId: Schema.Types.ObjectId;
+	cartId: mongoose.Types.ObjectId;
+	productItemId: mongoose.Types.ObjectId;
 	quantity: number;
 }
 
 const CartItemSchema = new Schema<ICartItem>(
 	{
-		cartId: { type: Schema.Types.ObjectId, required: true },
-		productItemId: { type: Schema.Types.ObjectId, required: true },
-		quantity: { type: Schema.Types.Number, required: true },
+		cartId: { type: mongoose.Schema.Types.ObjectId, required: true },
+		productItemId: { type: mongoose.Schema.Types.ObjectId, required: true },
+		quantity: { type: mongoose.Schema.Types.Number, required: true },
 	},
 	{ timestamps: true }
 );
