@@ -1,12 +1,17 @@
+import { Request, RequestHandler, Response } from "express";
+
 // imports
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 // my imports
-const User = require("../../models/User");
+import User from "../../models/User";
 
 const saltRounds = 10;
 
-const signupController = async (req, res) => {
+export const signupController: RequestHandler = async (
+	req: Request,
+	res: Response
+) => {
 	const { firstname, lastname, email, username, password } = req.body;
 
 	//
@@ -40,5 +45,3 @@ const signupController = async (req, res) => {
 			});
 	});
 };
-
-module.exports = { signupController };
