@@ -1,12 +1,25 @@
+import { Request, Response } from "express";
+import { Schema } from "mongoose";
+
 // my imports
 const { gfs } = require("../../configurations/files_config");
 const isValidObjectId = require("../../helper/isValidObjectId");
 const User = require("../../models/User");
 
-const getProfileController = async (req, res) => {
+export interface IUpdates {
+	firstname?: string;
+	lastname?: string;
+	role?: [string];
+	email?: string;
+	phoneNumber?: string;
+	address?: string;
+	profilePictureId?: Schema.Types.ObjectId;
+}
+
+const getProfileController = async (req: Request, res: Response) => {
 	const { uid } = req.params;
 	isValidObjectId(uid, res);
-	const user = await User.findById(uid)
+	await User.findById(uid)
 		.select("-password")
 		.then((user) => {
 			if (!user) {
@@ -19,7 +32,7 @@ const getProfileController = async (req, res) => {
 		});
 };
 
-const updateProfileController = async (req, res) => {
+const updateProfileController = async (req: Request, res: Response) => {
 	const { uid } = req.params;
 	const { firstname, lastname, role, email, phoneNumber, address } = req.body;
 
@@ -29,7 +42,7 @@ const updateProfileController = async (req, res) => {
 		return res.status(404).json("User not found");
 	}
 
-	const updates = {};
+	const updates: IUpdates = {};
 	if (firstname) {
 		updates.firstname = firstname;
 	}
