@@ -2,12 +2,12 @@ import { Request, RequestHandler, Response } from "express";
 import { isValidObjectId } from "../../helper/isValidObjectId";
 import CartItem from "../../models/CartItem";
 
-export interface ICartReqParam {
+export interface ICartItemReqParam {
 	id: string;
 }
 
-export const getCartItemController: RequestHandler<ICartReqParam> = async (
-	req: Request<ICartReqParam>,
+export const getCartItemController: RequestHandler<ICartItemReqParam> = async (
+	req: Request<ICartItemReqParam>,
 	res: Response
 ) => {
 	const { id } = req.params;
