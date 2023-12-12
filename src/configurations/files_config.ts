@@ -1,10 +1,10 @@
 // import packages
-const multer = require("multer");
-const { GridFsStorage } = require("multer-gridfs-storage");
-const path = require("path");
-const crypto = require("crypto");
+import multer from "multer";
+import { GridFsStorage } from "multer-gridfs-storage";
+import path from "path";
+import crypto from "crypto";
 
-let gfs = { GFS: null };
+export let gfs = { GFS: null };
 
 // use env files for this
 const uri = process.env.DB_URI || "mongodb://127.0.0.1:27017/ecommerce-app";
@@ -32,6 +32,4 @@ const storage = new GridFsStorage({
 	},
 });
 
-const upload = multer({ storage });
-
-module.exports = { upload, gfs };
+export const upload = multer({ storage });
