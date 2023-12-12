@@ -1,12 +1,37 @@
-// imports
-const mongoose = require("mongoose");
-
 // my exports
-const Product = require("../../models/Product");
-const isValidObjectId = require("../../helper/isValidObjectId");
+import Product from "../../models/Product";
+import { isValidObjectId } from "../../helper/isValidObjectId";
+import { Request, RequestHandler, Response } from "express";
 
-const getProductsController = async (req, res) => {
-	const page = req.query.page || 1;
+export interface ICreateProductReqBody {
+	name?: string;
+	ownerId?: string;
+	currency?: string;
+	category?: string;
+	description?: string;
+	price?: string;
+	stock?: string;
+	brand?: string;
+}
+
+export interface IProductUpdate {
+	name?: string;
+	currency?: string;
+	brand?: string;
+	category?: string;
+	description?: string;
+	price?: number;
+	stock?: number;
+}
+
+export const getProductsController: RequestHandler = async (
+	req: Request,
+	res: Response
+) => {
+	const pageStringNum: string | undefined = req.query.page as
+		| string
+		| undefined;
+	const page: number = parseInt(pageStringNum) || 1;
 	const productPerPage = 28;
 
 	await Product.find({})
@@ -22,7 +47,7 @@ const getProductsController = async (req, res) => {
 		})
 		.catch((error) => res.status(500).json("Internal server error"));
 };
-const getProductController = async (req, res) => {
+export const getProductController = async (req, res) => {
 	const { id } = req.params;
 	isValidObjectId(id, res);
 	const product = await Product.findById(id);
@@ -33,7 +58,10 @@ const getProductController = async (req, res) => {
 	return res.status(404).json("Product not found");
 };
 
-const createProduct = async (req, res) => {
+export const createProduct: RequestHandler = async (
+	req: Request<{}, {}, ICreateProductReqBody>,
+	res: Response
+) => {
 	const {
 		name,
 		ownerId,
@@ -44,23 +72,24 @@ const createProduct = async (req, res) => {
 		stock,
 		brand,
 	} = req.body;
-	const imagesId = req.files?.map((image) => image.id) || null;
+	const uploadedImages = req.files as Express.Multer.File[];
+	const imagesId = uploadedImages?.map((image) => image.id) || null;
 	// check if all fields has values
 	if (
-		(!name ||
-			!ownerId ||
-			!currency ||
-			!category ||
-			!description ||
-			!price ||
-			!stock,
-		!imagesId,
-		!brand)
+		!name ||
+		!ownerId ||
+		!currency ||
+		!category ||
+		!description ||
+		!price ||
+		!stock ||
+		!imagesId ||
+		!brand
 	) {
 		return res.status(400).json("Provide input in all fields");
 	}
 
-	Product.create({
+	await Product.create({
 		name,
 		ownerId,
 		currency,
@@ -79,11 +108,11 @@ const createProduct = async (req, res) => {
 		});
 };
 
-const productUpdateController = async (req, res) => {
+export const productUpdateController = async (req, res) => {
 	const { name, currency, category, description, price, stock, brand } =
 		req.body;
 	const { id } = req.params;
-	const updates = {};
+	const updates: IProductUpdate = {};
 	if (name) {
 		updates.name = name;
 	}
@@ -106,7 +135,7 @@ const productUpdateController = async (req, res) => {
 		updates.stock = stock;
 	}
 
-	Product.findByIdAndUpdate(id, updates)
+	await Product.findByIdAndUpdate(id, updates)
 		.then((response) => {
 			return res.status(200).json("Product updated");
 		})
@@ -115,7 +144,7 @@ const productUpdateController = async (req, res) => {
 		});
 };
 
-const productDeleteController = async (req, res) => {
+export const productDeleteController = async (req, res) => {
 	const { id } = req.params;
 
 	isValidObjectId(id, res);
@@ -128,12 +157,4 @@ const productDeleteController = async (req, res) => {
 			console.log(err);
 			return res.status(500).json("Internal server error");
 		});
-};
-
-module.exports = {
-	getProductsController,
-	getProductController,
-	createProduct,
-	productUpdateController,
-	productDeleteController,
 };
