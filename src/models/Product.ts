@@ -8,12 +8,12 @@ export interface IProduct extends Document {
 	category: string;
 	description: string;
 	brand: string;
-	price: Number;
-	stock: Number;
+	price: number;
+	stock: number;
 	imagesId: [Schema.Types.ObjectId];
 
 	// optional or not a user input fields
-	rating: { type: Number; default: 0 };
+	rating: { type: number; default: 0 };
 }
 
 const ProductSchema = new Schema<IProduct>(
