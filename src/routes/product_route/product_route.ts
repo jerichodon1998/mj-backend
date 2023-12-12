@@ -22,7 +22,7 @@ productRoute.get("/:id", expressAsyncHandler(getProductController));
 
 productRoute.post(
 	"/",
-	[verifyToken, verifyAdmin, upload.any("file")],
+	[verifyToken, verifyAdmin, upload.any()],
 	expressAsyncHandler(createProduct)
 );
 
