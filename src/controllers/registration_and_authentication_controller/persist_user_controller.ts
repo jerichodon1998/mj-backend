@@ -1,7 +1,7 @@
 // imported packages
 import jwt from "jsonwebtoken";
 // imported exported packages
-const accessTokenKey = process.env.ACCESS_TOKEN_KEY;
+const accessTokenKey = process.env.ACCESS_TOKEN_KEY || "accesstokenkey";
 import User from "../../models/User";
 import { Request, RequestHandler, Response } from "express";
 
