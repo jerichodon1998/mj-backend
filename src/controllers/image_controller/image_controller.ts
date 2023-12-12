@@ -1,13 +1,18 @@
 // imports
-const mongoose = require("mongoose");
-const { gfs } = require("../../configurations/files_config");
-const { conn } = require("../../configurations/db_config");
-
-// my imports
+import mongoose from "mongoose";
+import { gfs } from "../../configurations/files_config";
+import { Request, RequestHandler, Response } from "express";
 
 const ObjectId = mongoose.Types.ObjectId;
 
-const getImageController = async (req, res) => {
+export interface IImageReqParam {
+	id: string;
+}
+
+export const getImageController: RequestHandler<IImageReqParam> = async (
+	req: Request<IImageReqParam, {}, {}>,
+	res: Response
+) => {
 	const { id } = req.params;
 	let elements = [];
 	if (!ObjectId.isValid(id)) {
@@ -26,7 +31,10 @@ const getImageController = async (req, res) => {
 	}
 };
 
-const deleteImageController = async (req, res) => {
+export const deleteImageController: RequestHandler<IImageReqParam> = async (
+	req: Request<IImageReqParam, {}, {}>,
+	res: Response
+) => {
 	const { id } = req.params;
 	let elements = [];
 	if (!ObjectId.isValid(id)) {
@@ -48,5 +56,3 @@ const deleteImageController = async (req, res) => {
 	// 	return res.status(404).json("Don't exist");
 	// }
 };
-
-module.exports = { getImageController, deleteImageController };
