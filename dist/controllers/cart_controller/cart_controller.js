@@ -19,7 +19,6 @@ const Cart_1 = __importDefault(require("../../models/Cart"));
 const CartItem_1 = __importDefault(require("../../models/CartItem"));
 const User_1 = __importDefault(require("../../models/User"));
 const Product_1 = __importDefault(require("../../models/Product"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const getCartController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { uid } = req.params;
     (0, isValidObjectId_1.isValidObjectId)(uid, res);
@@ -166,7 +165,6 @@ const deleteCartController = (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.deleteCartController = deleteCartController;
 const removeFromCartController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { uid, cartItemId } = req.params;
-    const cartItemObjectId = new mongoose_1.default.Schema.Types.ObjectId(cartItemId);
     (0, isValidObjectId_1.isValidObjectId)(uid, res);
     (0, isValidObjectId_1.isValidObjectId)(cartItemId, res);
     const foundCart = yield Cart_1.default.findOne({
@@ -179,7 +177,7 @@ const removeFromCartController = (req, res) => __awaiter(void 0, void 0, void 0,
     Cart_1.default.findByIdAndUpdate(foundCart.id, {
         cartItemsId: [
             ...foundCart.cartItemsId.filter((itemId) => {
-                if (itemId !== cartItemObjectId)
+                if (itemId.toString() !== cartItemId)
                     return itemId;
             }),
         ],
