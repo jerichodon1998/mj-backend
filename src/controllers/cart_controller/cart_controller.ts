@@ -1,14 +1,26 @@
-// imports
-const mongoose = require("mongoose");
-
 // my exports
-const isValidObjectId = require("../../helper/isValidObjectId");
-const Cart = require("../../models/Cart");
-const CartItem = require("../../models/CartItem");
-const User = require("../../models/User");
-const Product = require("../../models/Product");
+import { isValidObjectId } from "../../helper/isValidObjectId";
+import Cart from "../../models/Cart";
+import CartItem from "../../models/CartItem";
+import User from "../../models/User";
+import Product from "../../models/Product";
+import { Request, RequestHandler, Response } from "express";
+import mongoose from "mongoose";
 
-const getCartController = async (req, res) => {
+export interface ICartReqParam {
+	uid?: string;
+	productId?: string;
+	cartItemId?: string;
+}
+
+export interface ICartReqBody {
+	quantity: number;
+}
+
+export const getCartController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid } = req.params;
 	isValidObjectId(uid, res);
 
@@ -25,7 +37,10 @@ const getCartController = async (req, res) => {
 		});
 };
 
-const getCartShippedController = async (req, res) => {
+export const getCartShippedController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid } = req.params;
 
 	Cart.find({ cartOwnerId: uid, isCheckout: true })
@@ -41,7 +56,10 @@ const getCartShippedController = async (req, res) => {
 		});
 };
 
-const checkOutCartController = async (req, res) => {
+export const checkOutCartController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid } = req.params;
 
 	await User.findById(uid)
@@ -62,7 +80,9 @@ const checkOutCartController = async (req, res) => {
 					return res.status(404).json("Cart Item Not Found");
 				}
 
-				const productItem = await Product.findById(cartItem.productItemId);
+				const productItem = (
+					await Product.findById(cartItem.productItemId)
+				).toObject();
 				if (!productItem) {
 					return res.status(404).json("Product Item Not Found");
 				}
@@ -97,7 +117,10 @@ const checkOutCartController = async (req, res) => {
 		});
 };
 
-const createCartController = async (req, res) => {
+export const createCartController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid } = req.params;
 
 	isValidObjectId(uid, res);
@@ -112,7 +135,11 @@ const createCartController = async (req, res) => {
 		.catch((err) => res.status(500).json("Internal server error"));
 };
 
-const addToCartController = async (req, res) => {
+export const addToCartController: RequestHandler<
+	ICartReqParam,
+	{},
+	ICartReqBody
+> = async (req: Request<ICartReqParam, {}, ICartReqBody>, res: Response) => {
 	const { quantity } = req.body;
 	const { uid, productId } = req.params;
 	isValidObjectId(uid, res);
@@ -125,8 +152,6 @@ const addToCartController = async (req, res) => {
 	const foundCart = await Cart.findOne({
 		cartOwnerId: uid,
 		isCheckout: false,
-	}).catch((err) => {
-		return res.status(500).json("Internal server error");
 	});
 
 	if (!foundCart) {
@@ -163,7 +188,10 @@ const addToCartController = async (req, res) => {
 		.catch((err) => res.status(500).json("Internal server error"));
 };
 
-const deleteCartController = async (req, res) => {
+export const deleteCartController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid } = req.params;
 
 	isValidObjectId(uid, res);
@@ -178,16 +206,18 @@ const deleteCartController = async (req, res) => {
 		.catch((err) => res.status(500).json("Internal server error"));
 };
 
-const removeFromCartController = async (req, res) => {
+export const removeFromCartController: RequestHandler<ICartReqParam> = async (
+	req: Request<ICartReqParam>,
+	res: Response
+) => {
 	const { uid, cartItemId } = req.params;
+	const cartItemObjectId = new mongoose.Schema.Types.ObjectId(cartItemId);
 	isValidObjectId(uid, res);
 	isValidObjectId(cartItemId, res);
 
 	const foundCart = await Cart.findOne({
 		cartOwnerId: uid,
 		isCheckout: false,
-	}).catch((err) => {
-		return res.status(500).json("Internal server error");
 	});
 
 	if (!foundCart) {
@@ -197,7 +227,7 @@ const removeFromCartController = async (req, res) => {
 	Cart.findByIdAndUpdate(foundCart.id, {
 		cartItemsId: [
 			...foundCart.cartItemsId.filter((itemId) => {
-				if (itemId !== cartItemId) return itemId;
+				if (itemId !== cartItemObjectId) return itemId;
 			}),
 		],
 	})
@@ -209,14 +239,4 @@ const removeFromCartController = async (req, res) => {
 				.catch((err) => res.status(500).json("Internal server error"));
 		})
 		.catch((err) => res.status(500).json("Internal server error"));
-};
-
-module.exports = {
-	getCartController,
-	getCartShippedController,
-	createCartController,
-	addToCartController,
-	removeFromCartController,
-	deleteCartController,
-	checkOutCartController,
 };
