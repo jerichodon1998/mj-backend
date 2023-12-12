@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { Schema } from "mongoose";
+import { IUser } from "../../models/User";
 
 // my imports
-const { gfs } = require("../../configurations/files_config");
-const isValidObjectId = require("../../helper/isValidObjectId");
-const User = require("../../models/User");
+import { gfs } from "../../configurations/files_config";
+import { isValidObjectId } from "../../helper/isValidObjectId";
+import User from "../../models/User";
 
 export interface IUpdates {
 	firstname?: string;
@@ -16,12 +17,15 @@ export interface IUpdates {
 	profilePictureId?: Schema.Types.ObjectId;
 }
 
-const getProfileController = async (req: Request, res: Response) => {
+export const getProfileController: RequestHandler = async (
+	req: Request,
+	res: Response
+) => {
 	const { uid } = req.params;
 	isValidObjectId(uid, res);
 	await User.findById(uid)
 		.select("-password")
-		.then((user) => {
+		.then((user: IUser) => {
 			if (!user) {
 				return res.status(404).json("User not found");
 			}
@@ -32,11 +36,14 @@ const getProfileController = async (req: Request, res: Response) => {
 		});
 };
 
-const updateProfileController = async (req: Request, res: Response) => {
+export const updateProfileController: RequestHandler = async (
+	req: Request,
+	res: Response
+) => {
 	const { uid } = req.params;
 	const { firstname, lastname, role, email, phoneNumber, address } = req.body;
 
-	const userExist = await User.findById(uid);
+	const userExist: IUser = await User.findById(uid);
 
 	if (!userExist) {
 		return res.status(404).json("User not found");
@@ -73,12 +80,10 @@ const updateProfileController = async (req: Request, res: Response) => {
 
 	await User.findByIdAndUpdate(uid, updates)
 		.select("-password")
-		.then((docs) => {
+		.then((doc: IUser) => {
 			return res.status(200).json("Profile updated successfully");
 		})
 		.catch((err) => {
 			return res.status(500).json("Internal server error");
 		});
 };
-
-module.exports = { updateProfileController, getProfileController };
