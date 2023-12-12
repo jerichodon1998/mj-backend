@@ -211,7 +211,6 @@ export const removeFromCartController: RequestHandler<ICartReqParam> = async (
 	res: Response
 ) => {
 	const { uid, cartItemId } = req.params;
-	const cartItemObjectId = new mongoose.Schema.Types.ObjectId(cartItemId);
 	isValidObjectId(uid, res);
 	isValidObjectId(cartItemId, res);
 
@@ -227,7 +226,7 @@ export const removeFromCartController: RequestHandler<ICartReqParam> = async (
 	Cart.findByIdAndUpdate(foundCart.id, {
 		cartItemsId: [
 			...foundCart.cartItemsId.filter((itemId) => {
-				if (itemId !== cartItemObjectId) return itemId;
+				if (itemId.toString() !== cartItemId) return itemId;
 			}),
 		],
 	})

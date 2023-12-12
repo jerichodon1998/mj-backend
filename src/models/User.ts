@@ -1,5 +1,5 @@
 // import packages
-import { Schema, Document, model } from "mongoose";
+import mongoose, { Schema, Document, model } from "mongoose";
 
 export interface IUser extends Document {
 	firstname: string;
@@ -9,21 +9,25 @@ export interface IUser extends Document {
 	username: string;
 	phoneNumber?: string;
 	address?: string;
-	profilePictureId?: Schema.Types.ObjectId;
+	profilePictureId?: mongoose.Types.ObjectId;
 	role: string[];
 }
 
 const UserSchema = new Schema<IUser>(
 	{
-		firstname: { type: Schema.Types.String, required: true },
-		lastname: { type: Schema.Types.String, required: true },
-		password: { type: Schema.Types.String, required: true },
-		email: { type: Schema.Types.String, unique: true, required: true },
-		username: { type: Schema.Types.String, unique: true, required: true },
-		phoneNumber: { type: Schema.Types.String },
-		address: { type: Schema.Types.String },
-		profilePictureId: { type: Schema.Types.ObjectId },
-		role: { type: [Schema.Types.String] },
+		firstname: { type: mongoose.Schema.Types.String, required: true },
+		lastname: { type: mongoose.Schema.Types.String, required: true },
+		password: { type: mongoose.Schema.Types.String, required: true },
+		email: { type: mongoose.Schema.Types.String, unique: true, required: true },
+		username: {
+			type: mongoose.Schema.Types.String,
+			unique: true,
+			required: true,
+		},
+		phoneNumber: { type: mongoose.Schema.Types.String },
+		address: { type: mongoose.Schema.Types.String },
+		profilePictureId: { type: mongoose.Schema.Types.ObjectId },
+		role: { type: [mongoose.Schema.Types.String] },
 	},
 	{ timestamps: true }
 );

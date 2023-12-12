@@ -1,16 +1,16 @@
 // import packages
-import { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model } from "mongoose";
 
 export interface ICart extends Document {
-	cartOwnerId: Schema.Types.ObjectId;
-	cartItemsId: [Schema.Types.ObjectId];
+	cartOwnerId: mongoose.Types.ObjectId;
+	cartItemsId: [mongoose.Types.ObjectId];
 	isCheckout: boolean;
 }
 
 const CartSchema = new Schema<ICart>(
 	{
-		cartOwnerId: { type: Schema.Types.ObjectId, required: true },
-		cartItemsId: { type: [Schema.Types.ObjectId], default: [] },
+		cartOwnerId: { type: mongoose.Schema.Types.ObjectId, required: true },
+		cartItemsId: { type: [mongoose.Schema.Types.ObjectId], default: [] },
 		isCheckout: { type: Boolean, default: false },
 	},
 	{ timestamps: true }
