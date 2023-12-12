@@ -19,7 +19,7 @@ export const signinController: RequestHandler = async (
 		return res.status(400).json("Provide input to all required fields");
 	}
 
-	const userExist = (await User.findOne({ email })).toObject();
+	const userExist = await User.findOne({ email });
 	// check if email/username already exist
 	if (!userExist) {
 		return res.status(404).json("Email on that account doesn't exist");
