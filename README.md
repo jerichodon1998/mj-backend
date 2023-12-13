@@ -9,22 +9,22 @@ deployed app on : https://mj-ecommerce.vercel.app/
 
 ### main
 
-    - Express + NodeJs + mongodb + typescript
+- Express + NodeJs + mongodb + typescript
 
 ### Other Dependencies
 
-    - mongoose, multer, multer-gridfs-storage
-    - cookie-parser
-    - jsonwebtoken
-    - bcrypt
-    - axios
-    - node-cron
-    - dotenv, cors
-    - morgan
+- mongoose, multer, multer-gridfs-storage
+- cookie-parser
+- jsonwebtoken
+- bcrypt
+- axios
+- node-cron
+- dotenv, cors
+- morgan
 
 ### Additional dependencies for development
 
-    - nodemon, ts-node
+- nodemon, ts-node
 
 # Getting started
 
@@ -66,8 +66,8 @@ Open [http://localhost:1337](http://localhost:1337) with your browser to see the
 
 ### Realtime features
 
-[] Socket.io with mongodb streams
+[ ] Socket.io with mongodb streams
 
 ## More to-dos
 
-[] Comments on code
+[ ] Comments on code
