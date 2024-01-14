@@ -24,7 +24,7 @@ export const verifyAdmin = async (
 		if (response?.role?.includes("admin")) {
 			next();
 		} else {
-			return res.status(401).json("sure ba Unauthorized access");
+			return res.status(401).json("Unauthorized access");
 		}
 	});
 };
